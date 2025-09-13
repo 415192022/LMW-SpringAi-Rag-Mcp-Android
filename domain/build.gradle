@@ -1,0 +1,46 @@
+plugins {
+    alias(libs.plugins.androidLibrary)
+    alias(libs.plugins.jetbrainsKotlinAndroid)
+    alias(libs.plugins.kotlinKapt)
+}
+
+android {
+    namespace 'com.lmw.mcp_rag_chat.domain'
+    compileSdk 35
+
+    defaultConfig {
+        minSdk 24
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+    kotlinOptions {
+        jvmTarget = '1.8'
+    }
+}
+
+dependencies {
+    // 模块依赖 - 使用api依赖core模块，传递core的API依赖
+    api project(':core')
+    
+    // 对外暴露的API依赖（可被依赖此模块的其他模块访问）
+    api libs.bundles.domain.api
+    
+    // 内部实现依赖（仅在本模块内部使用）
+    implementation libs.bundles.domain.impl
+    
+    // 依赖注入 - 编译时处理
+    kapt libs.hilt.compiler
+    
+    // 测试依赖
+    testImplementation libs.junit
+}
